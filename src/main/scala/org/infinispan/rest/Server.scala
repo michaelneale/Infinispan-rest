@@ -1,3 +1,4 @@
+package org.infinispan.rest
 
 import javax.ws.rs.GET
 import javax.ws.rs.Path
@@ -11,6 +12,7 @@ class Server {
   @GET
   @Path("/{message}")
   def echoService(@PathParam("message") message: String) = {
-      Response.status(200).entity(message).build();
+
+      Response.status(200).entity("here we are !").build();
   }
 }
