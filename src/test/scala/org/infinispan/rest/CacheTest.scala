@@ -32,6 +32,12 @@ class CacheTest extends TestCase {
 
     val cache11 = cm.getCache("man")
     assertEquals("no", cache11.get("Hey"))
+    assertTrue(cache11.containsKey("Hey"))
+
+    cache11.stop
+
+    val cache111 = cm.getCache("man")
+    assertFalse(cache111.containsKey("Hey"))
 
 
 
