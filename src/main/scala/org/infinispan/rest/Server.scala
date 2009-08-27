@@ -21,6 +21,9 @@ class Server {
   }
 
 
+  //TODO: get on a cache name to return a list of entries??
+  //TODO: can we iterate over the number of caches under management? 
+
   @PUT
   @POST
   @Path("/{cacheName}/{cacheKey}")
@@ -36,7 +39,7 @@ class Server {
   }
 
   @DELETE
-  @Path("/{cacheName}/{cacheKey}")
+  @Path("/{cacheName}")
   def killCache(@PathParam("cacheName") cacheName: String) = {
     ManagerInstance.getCache(cacheName).stop
   }

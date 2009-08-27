@@ -33,7 +33,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/main/scala/org/infinispan/rest/Server.scala" line="14" class="Class at Server.scala:21" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/main/scala/org/infinispan/rest/Server.scala" line="14" class="Class at Server.scala:14" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -46,7 +46,7 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/main/scala/org/infinispan/rest/Server.scala" line="28" class="Class at Server.scala:35" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/main/scala/org/infinispan/rest/Server.scala" line="31" class="Class at Server.scala:31" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -59,7 +59,20 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/IntegrationTest.scala" line="22" class="Class at IntegrationTest.scala:22" package="">
+      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/IntegrationTest.scala" line="23" class="Class at IntegrationTest.scala:22" package="">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/CacheTest.scala" line="43" class="Class at CacheTest.scala:43" package="">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -130,10 +143,37 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Server.scala" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="Server.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/org/infinispan/rest/Server.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="10" column="0" selection-start="303" selection-end="303" vertical-scroll-proportion="-0.10549451">
+            <state line="40" column="32" selection-start="1306" selection-end="1306" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CacheManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/manager/CacheManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="131" column="17" selection-start="7458" selection-end="7458" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ComponentStatus.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/lifecycle/ComponentStatus.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="33" column="12" selection-start="1310" selection-end="1310" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Address.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/remoting/transport/Address.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="8" column="17" selection-start="145" selection-end="145" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -142,7 +182,16 @@
       <file leaf-file-name="CacheTest.scala" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/CacheTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="34" column="22" selection-start="1072" selection-end="1072" vertical-scroll-proportion="0.0">
+            <state line="49" column="31" selection-start="1339" selection-end="1339" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DefaultCacheManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/manager/DefaultCacheManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="411" column="17" selection-start="18671" selection-end="18671" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -151,7 +200,7 @@
       <file leaf-file-name="Cache.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/Cache.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="101" column="17" selection-start="5356" selection-end="5356" vertical-scroll-proportion="0.0">
+            <state line="250" column="5" selection-start="12323" selection-end="12323" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -175,46 +224,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="web.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/web.xml">
-          <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleGeneralEditorProvider">
-            <state />
-          </provider>
-          <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorReferencesProvider">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="70" selection-start="468" selection-end="468" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="com.intellij.javaee.module.view.web.viewlets.WebModuleAssemblyDescriptorProvider">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IntegrationTest.scala" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="IntegrationTest.scala" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/IntegrationTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="38" column="0" selection-start="1129" selection-end="1129" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ContextHandler.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/jetty/6.1.15/jetty-6.1.15-sources.jar!/org/mortbay/jetty/handler/ContextHandler.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="455" column="16" selection-start="15258" selection-end="15258" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ResteasyBootstrap.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/org/jboss/resteasy/resteasy-jaxrs/1.0.0.GA/resteasy-jaxrs-1.0.0.GA.jar!/org/jboss/resteasy/plugins/server/servlet/ResteasyBootstrap.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="13" selection-start="179" selection-end="179" vertical-scroll-proportion="0.0">
+            <state line="20" column="57" selection-start="533" selection-end="533" vertical-scroll-proportion="0.7032967">
               <folding />
             </state>
           </provider>
@@ -690,6 +703,70 @@
         </PATH_ELEMENT>
         <PATH_ELEMENT>
           <option name="myItemId" value="infinispan" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Infinispan-rest-server" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="rest-server" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Maven: org.infinispan:infinispan-core:4.0.0-SNAPSHOT" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="infinispan-core-4.0.0-SNAPSHOT.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="infinispan" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="remoting" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Infinispan-rest-server" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="rest-server" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewModuleNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Libraries" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.LibraryGroupNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Maven: org.infinispan:infinispan-core:4.0.0-SNAPSHOT" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="infinispan-core-4.0.0-SNAPSHOT.jar" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="infinispan" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="remoting" />
+          <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="transport" />
           <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
         </PATH_ELEMENT>
       </PATH>
@@ -1296,7 +1373,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1440" height="874" extended-state="6" />
+    <frame x="220" y="99" width="1440" height="874" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
@@ -1357,34 +1434,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$MAVEN_REPOSITORY$/org/jboss/resteasy/jaxrs-api/1.0.0.GA/jaxrs-api-1.0.0.GA.jar!/javax/ws/rs/core/Response.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="84" column="50" selection-start="4912" selection-end="4912" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/jboss/resteasy/resteasy-jaxrs/1.0.0.GA/resteasy-jaxrs-1.0.0.GA.jar!/org/jboss/resteasy/plugins/server/servlet/HttpServletDispatcher.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="179" selection-end="179" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/org/mortbay/jetty/jetty/6.1.15/jetty-6.1.15-sources.jar!/org/mortbay/jetty/Server.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="13" selection-start="2149" selection-end="2149" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar!/org/apache/commons/httpclient/params/HttpClientParams.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="13" selection-start="174" selection-end="174" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/jboss/resteasy/jaxrs-api/1.0.0.GA/jaxrs-api-1.0.0.GA.jar!/javax/ws/rs/PathParam.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="252" selection-start="388" selection-end="388" vertical-scroll-proportion="0.0">
@@ -1450,30 +1499,58 @@
         </state>
       </provider>
     </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/remoting/transport/Address.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="17" selection-start="145" selection-end="145" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/lifecycle/ComponentStatus.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="12" selection-start="1310" selection-end="1310" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/Cache.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="17" selection-start="5356" selection-end="5356" vertical-scroll-proportion="0.0">
+        <state line="250" column="5" selection-start="12323" selection-end="12323" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/manager/CacheManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="131" column="17" selection-start="7458" selection-end="7458" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/infinispan/infinispan-core/4.0.0-SNAPSHOT/infinispan-core-4.0.0-SNAPSHOT-sources.jar!/org/infinispan/manager/DefaultCacheManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="411" column="17" selection-start="18671" selection-end="18671" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/CacheTest.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="22" selection-start="1072" selection-end="1072" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/IntegrationTest.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="38" column="0" selection-start="1129" selection-end="1129" vertical-scroll-proportion="0.0">
+        <state line="49" column="31" selection-start="1339" selection-end="1339" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/infinispan/rest/Server.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="0" selection-start="303" selection-end="303" vertical-scroll-proportion="-0.10549451">
+        <state line="40" column="32" selection-start="1306" selection-end="1306" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/IntegrationTest.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="57" selection-start="533" selection-end="533" vertical-scroll-proportion="0.7032967">
           <folding />
         </state>
       </provider>

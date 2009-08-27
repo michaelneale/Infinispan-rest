@@ -40,6 +40,13 @@ class CacheTest extends TestCase {
     assertFalse(cache111.containsKey("Hey"))
 
 
+    val ls = cm.getMembers
+    println(ls)
+
+
+    cm.getCache("man").put("wee", "waa")
+    assertEquals("waa", cm.getCache("man").get("wee"))
+
 
 
   }

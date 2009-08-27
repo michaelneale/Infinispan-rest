@@ -6,6 +6,7 @@ import apache.commons.httpclient.methods.{PutMethod, GetMethod, PostMethod}
 import java.io.ByteArrayInputStream
 import jboss.resteasy.plugins.server.servlet.{HttpServletDispatcher, ResteasyBootstrap}
 import junit.framework.TestCase
+import junit.framework.Assert._
 import mortbay.jetty.servlet.Context
 
 /**
@@ -24,7 +25,6 @@ class IntegrationTest extends TestCase {
     val initialXML = <hey>ho</hey>
 
     insert.setRequestBody(new ByteArrayInputStream(initialXML.toString.getBytes))
-    //TODO: work out why we MUST have a content type set on a put... askbill...
     insert.setRequestHeader("Content-Type", "application/octet-stream")
 
     client.executeMethod(insert)
@@ -34,7 +34,7 @@ class IntegrationTest extends TestCase {
 
     val get = new GetMethod("http://localhost:8888/rest/mycache/mydata")
     client.executeMethod(get)
-    println("FROM CACHE:" + get.getResponseBodyAsString)
+    assertEquals(<hey>ho</hey>.toString, get.getResponseBodyAsString)
 
 
 
