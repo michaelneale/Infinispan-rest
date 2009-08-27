@@ -1,6 +1,7 @@
 package org.infinispan.rest
 
 import java.io.{Serializable, InputStream}
+import java.util.concurrent.TimeUnit
 import java.util.Date
 import javax.servlet.{ServletContextEvent, ServletContextListener}
 import javax.ws.rs._
@@ -14,7 +15,7 @@ class Server {
   @Path("/{cacheName}/{cacheKey}")
   def getItem(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
       ManagerInstance.getEntry(cacheName, key) match {
-        case b: CachedBlob => {
+        case b: CacheEntry => {
           Response ok(b.data, b.mediaType) build
         }
         case null => Response noContent() build()
@@ -26,12 +27,18 @@ class Server {
   //TODO: can we iterate over the number of caches under management? 
 
   @PUT
-  @POST
+  @POST            //SPLIT out POST to only create new...
   @Path("/{cacheName}/{cacheKey}")
   def putIt(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String,
             @HeaderParam("Content-Type") mediaType: String, data: Array[Byte],
-            @HeaderParam("Content-Expires") expires: Date) = {
-        ManagerInstance.getCache(cacheName).put(key, new CachedBlob(mediaType, data))
+            @HeaderParam("timeToLiveSeconds") ttl: Long,
+            @HeaderParam("maxIdleTimeSeconds") idleTime: Long) = {
+            (ttl, idleTime) match {
+              case (0, 0) => ManagerInstance.getCache(cacheName).put(key, new CacheEntry(mediaType, data))
+              case (x, 0) => ManagerInstance.getCache(cacheName).put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
+              case (x, y) => ManagerInstance.getCache(cacheName).put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
+            }
+
   }
 
   @DELETE
@@ -74,11 +81,15 @@ class StartupListener extends ServletContextListener {
 object ManagerInstance {
    var instance: CacheManager = null
    def getCache(name: String) = {
-      instance.getCache(name).asInstanceOf[Cache[String, CachedBlob]]
+      instance.getCache(name).asInstanceOf[Cache[String, CacheEntry]]
    }
-   def getEntry(cacheName: String, key: String) : CachedBlob = {
+   def getEntry(cacheName: String, key: String) : CacheEntry = {
      getCache(cacheName).get(key)
    }
 }
 
-class CachedBlob(val mediaType: String, val data: Array[Byte]) extends Serializable
+/** What is actually stored in the cache */
+class CacheEntry(var mediaType: String, var data: Array[Byte]) extends Serializable {
+  //need to put date last modified here, and ETag calc...  
+
+}

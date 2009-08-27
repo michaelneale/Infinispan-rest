@@ -29,8 +29,8 @@ class IntegrationTest extends TestCase {
     insert.setRequestHeader("Content-Type", "application/octet-stream")
 
     client.executeMethod(insert)
+    assertNull(insert.getResponseBodyAsString)
 
-    val response = insert.getResponseBodyAsString
 
 
     val get = new GetMethod("http://localhost:8888/rest/mycache/mydata")
