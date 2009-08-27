@@ -1,6 +1,7 @@
 package org.infinispan.rest
 
 import java.io.{Serializable, InputStream}
+import java.util.Date
 import javax.servlet.{ServletContextEvent, ServletContextListener}
 import javax.ws.rs._
 import core.Response.Status
@@ -28,7 +29,8 @@ class Server {
   @POST
   @Path("/{cacheName}/{cacheKey}")
   def putIt(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String,
-            @HeaderParam("Content-Type") mediaType: String, data: Array[Byte]) = {
+            @HeaderParam("Content-Type") mediaType: String, data: Array[Byte],
+            @HeaderParam("Content-Expires") expires: Date) = {
         ManagerInstance.getCache(cacheName).put(key, new CachedBlob(mediaType, data))
   }
 

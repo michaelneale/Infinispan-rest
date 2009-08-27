@@ -2,8 +2,9 @@ package org.infinispan.rest
 
 
 import apache.commons.httpclient.HttpClient
-import apache.commons.httpclient.methods.{PutMethod, GetMethod, PostMethod}
+import apache.commons.httpclient.methods.{DeleteMethod, PutMethod, GetMethod, PostMethod}
 import java.io.ByteArrayInputStream
+import java.util.Date
 import jboss.resteasy.plugins.server.servlet.{HttpServletDispatcher, ResteasyBootstrap}
 import junit.framework.TestCase
 import junit.framework.Assert._
@@ -36,6 +37,26 @@ class IntegrationTest extends TestCase {
     client.executeMethod(get)
     assertEquals(<hey>ho</hey>.toString, get.getResponseBodyAsString)
 
+
+
+    val remove = new DeleteMethod("http://localhost:8888/rest/mycache/mydata");
+    client.executeMethod(remove)
+
+
+    client.executeMethod(get)
+    assertNull(get.getResponseBodyAsString)
+
+    client.executeMethod(insert)
+    client.executeMethod(get)
+    assertEquals(<hey>ho</hey>.toString, get.getResponseBodyAsString)
+
+    val removeAll = new DeleteMethod("http://localhost:8888/rest/mycache");
+    client.executeMethod(removeAll)
+
+    client.executeMethod(get)
+    assertNull(get.getResponseBodyAsString)
+    
+    
 
 
 
