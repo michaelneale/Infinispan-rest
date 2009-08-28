@@ -34,6 +34,8 @@ class IntegrationTest extends TestCase {
 
     val get = new GetMethod("http://localhost:8888/rest/mycache/mydata")
     client.executeMethod(get)
+    val bytes = get.getResponseBody
+    assertEquals(bytes.size, initialXML.toString.getBytes.size)
     assertEquals(<hey>ho</hey>.toString, get.getResponseBodyAsString)
     val hdr: Header = get.getResponseHeader("Content-Type")
     assertEquals("application/octet-stream", hdr.getValue)
@@ -56,22 +58,30 @@ class IntegrationTest extends TestCase {
 
 
 
-    /*
+    
+
+
+
     val bout = new ByteArrayOutputStream
     val oo = new ObjectOutputStream(bout)
     oo.writeObject(new CacheEntry("foo", "hey".getBytes))
     oo.flush
-    insert.setRequestBody(new ByteArrayInputStream(bout.toByteArray))
-    client.executeMethod(insert)
+    val byteData = bout.toByteArray
+    println(byteData.length)
 
-    client.executeMethod(get)
-    assertFalse(HttpServletResponse.SC_NOT_FOUND == get.getStatusCode)
+    val insertMore = new PutMethod("http://localhost:8888/rest/mycache/mydata")
 
-    val bytesBack = get.getResponseBody
-    val oin = new ObjectInputStream( new ByteArrayInputStream(bytesBack) )
-    val somethingBack = oin.readObject.asInstanceOf[CacheEntry]
-    assertEquals("hey", new String(somethingBack.data))
-    */
+    insertMore.setRequestBody(new ByteArrayInputStream(byteData))
+    insertMore.setRequestHeader("Content-Type", "application/octet-stream")
+
+    client.executeMethod(insertMore)
+
+    val getMore = new GetMethod("http://localhost:8888/rest/mycache/mydata")
+    client.executeMethod(getMore)
+
+    val bytesBack = getMore.getResponseBody
+    assertEquals(byteData.length, bytesBack.length)
+
   }
 
 

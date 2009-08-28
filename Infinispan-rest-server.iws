@@ -46,19 +46,6 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/IntegrationTest.scala" line="70" class="Class at IntegrationTest.scala:69" package="">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="false" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
     </line_breakpoints>
     <breakpoint_any>
       <breakpoint>
@@ -156,7 +143,7 @@
       <file leaf-file-name="IntegrationTest.scala" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/IntegrationTest.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="73" column="6" selection-start="2454" selection-end="2454" vertical-scroll-proportion="0.8441247">
+            <state line="78" column="74" selection-start="2510" selection-end="2510" vertical-scroll-proportion="0.57793766">
               <folding />
             </state>
           </provider>
@@ -165,7 +152,7 @@
       <file leaf-file-name="ObjectOutputStream.java" pinned="false" current="false" current-in-tab="false">
         <entry file="jar:///System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/src.jar!/src/java/io/ObjectOutputStream.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1080" column="0" selection-start="39988" selection-end="39988" vertical-scroll-proportion="0.0">
+            <state line="1084" column="67" selection-start="40110" selection-end="40110" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -938,7 +925,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1440" height="874" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Web Preview" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
       <window_info id="Dataflow to this" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
@@ -955,7 +942,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.322237" sideWeight="0.5" order="2" side_tool="false" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.322237" sideWeight="0.5" order="2" side_tool="false" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3954727" sideWeight="0.5" order="3" side_tool="false" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" />
@@ -1068,13 +1055,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/org/infinispan/rest/Server.scala">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="17" selection-start="2563" selection-end="2563" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$MAVEN_REPOSITORY$/commons-httpclient/commons-httpclient/3.1/commons-httpclient-3.1.jar!/org/apache/commons/httpclient/Header.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="13" selection-start="682" selection-end="682" vertical-scroll-proportion="0.0">
@@ -1089,13 +1069,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar:///System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/src.jar!/src/java/io/ObjectOutputStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1080" column="0" selection-start="39988" selection-end="39988" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/org/infinispan/rest/CacheEntry.scala">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="6" selection-start="165" selection-end="165" vertical-scroll-proportion="0.0">
@@ -1103,9 +1076,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/org/infinispan/rest/Server.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="62" column="17" selection-start="2563" selection-end="2563" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/src.jar!/src/java/io/ObjectOutputStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1084" column="67" selection-start="40110" selection-end="40110" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/scala/org/infinispan/rest/IntegrationTest.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="73" column="6" selection-start="2454" selection-end="2454" vertical-scroll-proportion="0.8441247">
+        <state line="78" column="74" selection-start="2510" selection-end="2510" vertical-scroll-proportion="0.57793766">
           <folding />
         </state>
       </provider>
