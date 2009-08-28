@@ -1,50 +1,82 @@
 package org.infinispan.rest
 
-import java.io.{Serializable, InputStream}
 import java.util.concurrent.TimeUnit
-import java.util.Date
-import javax.servlet.{ServletContextEvent, ServletContextListener}
 import javax.ws.rs._
-import core.Response.Status
-import core.{MediaType, Response}
+import core.Response.{ResponseBuilder, Status}
+import core.{Context, Request, Response}
 import manager.{CacheManager, DefaultCacheManager}
+
 @Path("/rest")
-class Server {
+class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: Boolean) {
 
   @GET
   @Path("/{cacheName}/{cacheKey}")
-  def getItem(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
+  def getEntry(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
+    println("USE ASYNC: " + useAsync)
       ManagerInstance.getEntry(cacheName, key) match {
         case b: CacheEntry => {
-          Response ok(b.data, b.mediaType) build
+          request.evaluatePreconditions(b.lastModified, b.etag) match {
+            case bldr: ResponseBuilder => bldr.build
+            case null => Response.ok(b.data, b.mediaType).lastModified(b.lastModified).tag(b.etag).build
+          }
         }
-        case null => Response noContent() build()
+        case null => Response status(Status.NOT_FOUND) build
+      }
+  }
+
+  @HEAD
+  @Path("/{cacheName}/{cacheKey}")
+  def headEntry(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
+      ManagerInstance.getEntry(cacheName, key) match {
+        case b: CacheEntry => {
+          request.evaluatePreconditions(b.lastModified, b.etag) match {
+            case bldr: ResponseBuilder => bldr.build
+            case null => Response.ok.header("Content-Type", b.mediaType).lastModified(b.lastModified).tag(b.etag).build
+          }
+        }
+        case null => Response status(Status.NOT_FOUND) build
       }
   }
 
 
-  //TODO: get on a cache name to return a list of entries??
-  //TODO: can we iterate over the number of caches under management? 
-
   @PUT
-  @POST            //SPLIT out POST to only create new...
+  @POST
   @Path("/{cacheName}/{cacheKey}")
-  def putIt(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String,
+  def putEntry(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String,
             @HeaderParam("Content-Type") mediaType: String, data: Array[Byte],
             @HeaderParam("timeToLiveSeconds") ttl: Long,
             @HeaderParam("maxIdleTimeSeconds") idleTime: Long) = {
-            (ttl, idleTime) match {
-              case (0, 0) => ManagerInstance.getCache(cacheName).put(key, new CacheEntry(mediaType, data))
-              case (x, 0) => ManagerInstance.getCache(cacheName).put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
-              case (x, y) => ManagerInstance.getCache(cacheName).put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
+            val cache = ManagerInstance.getCache(cacheName)
+            if (request.getMethod == "POST" && cache.containsKey(key)) {
+                Response.status(Status.CONFLICT).build()
+            } else {
+              (ttl, idleTime) match {
+                case (0, 0) => put(cache, key, new CacheEntry(mediaType, data))
+                case (x, 0) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
+                case (x, y) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
+              }
             }
-
   }
+
+  private def put(cache: Cache[String, CacheEntry], key: String, entry: CacheEntry) = {
+    if (useAsync) {
+      cache.putAsync(key, entry)
+    } else {
+      cache.put(key, entry) 
+    }
+  }
+
+
+
 
   @DELETE
   @Path("/{cacheName}/{cacheKey}")
-  def remove(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
-    ManagerInstance.getCache(cacheName).remove(key)
+  def removeEntry(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
+    if (useAsync) {
+      ManagerInstance.getCache(cacheName).removeAsync(key)      
+    } else {
+      ManagerInstance.getCache(cacheName).remove(key)
+    }
   }
 
   @DELETE
@@ -61,19 +93,7 @@ class Server {
 }
 
 
-/**
- * To init the cache manager. Nice to do this on startup as any config problems will be picked up before any
- * requests are attempted to be serviced. Less kitten carnage.
- */
-class StartupListener extends ServletContextListener {
-  def contextInitialized(ev: ServletContextEvent) = {
-    ManagerInstance.instance = new DefaultCacheManager("cache-config.xml")
-    ManagerInstance.instance.start
-  }
-  def contextDestroyed(ev: ServletContextEvent) = {
-    ManagerInstance.instance.stop
-  }
-}
+
 
 /**
  * Just wrap a single instance of the Infinispan cache manager. 
@@ -88,8 +108,3 @@ object ManagerInstance {
    }
 }
 
-/** What is actually stored in the cache */
-class CacheEntry(var mediaType: String, var data: Array[Byte]) extends Serializable {
-  //need to put date last modified here, and ETag calc...  
-
-}

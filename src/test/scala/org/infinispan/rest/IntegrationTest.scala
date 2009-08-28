@@ -1,10 +1,11 @@
 package org.infinispan.rest
 
 
-import apache.commons.httpclient.HttpClient
 import apache.commons.httpclient.methods.{DeleteMethod, PutMethod, GetMethod, PostMethod}
-import java.io.ByteArrayInputStream
+import apache.commons.httpclient.{Header, HttpClient}
+import java.io._
 import java.util.Date
+import javax.servlet.http.HttpServletResponse
 import jboss.resteasy.plugins.server.servlet.{HttpServletDispatcher, ResteasyBootstrap}
 import junit.framework.TestCase
 import junit.framework.Assert._
@@ -31,20 +32,17 @@ class IntegrationTest extends TestCase {
     client.executeMethod(insert)
     assertNull(insert.getResponseBodyAsString)
 
-
-
     val get = new GetMethod("http://localhost:8888/rest/mycache/mydata")
     client.executeMethod(get)
     assertEquals(<hey>ho</hey>.toString, get.getResponseBodyAsString)
-
-
+    val hdr: Header = get.getResponseHeader("Content-Type")
+    assertEquals("application/octet-stream", hdr.getValue)
 
     val remove = new DeleteMethod("http://localhost:8888/rest/mycache/mydata");
     client.executeMethod(remove)
-
-
     client.executeMethod(get)
-    assertNull(get.getResponseBodyAsString)
+
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, get.getStatusCode)
 
     client.executeMethod(insert)
     client.executeMethod(get)
@@ -54,13 +52,29 @@ class IntegrationTest extends TestCase {
     client.executeMethod(removeAll)
 
     client.executeMethod(get)
-    assertNull(get.getResponseBodyAsString)
-    
-    
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, get.getStatusCode)
 
 
 
+    /*
+    val bout = new ByteArrayOutputStream
+    val oo = new ObjectOutputStream(bout)
+    oo.writeObject(new CacheEntry("foo", "hey".getBytes))
+    oo.flush
+    insert.setRequestBody(new ByteArrayInputStream(bout.toByteArray))
+    client.executeMethod(insert)
+
+    client.executeMethod(get)
+    assertFalse(HttpServletResponse.SC_NOT_FOUND == get.getStatusCode)
+
+    val bytesBack = get.getResponseBody
+    val oin = new ObjectInputStream( new ByteArrayInputStream(bytesBack) )
+    val somethingBack = oin.readObject.asInstanceOf[CacheEntry]
+    assertEquals("hey", new String(somethingBack.data))
+    */
   }
+
+
 
 
   def startServer = {
