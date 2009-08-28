@@ -12,7 +12,6 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
   @GET
   @Path("/{cacheName}/{cacheKey}")
   def getEntry(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
-    println("USE ASYNC: " + useAsync)
       ManagerInstance.getEntry(cacheName, key) match {
         case b: CacheEntry => {
           request.evaluatePreconditions(b.lastModified, b.etag) match {
@@ -31,7 +30,7 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
         case b: CacheEntry => {
           request.evaluatePreconditions(b.lastModified, b.etag) match {
             case bldr: ResponseBuilder => bldr.build
-            case null => Response.ok.header("Content-Type", b.mediaType).lastModified(b.lastModified).tag(b.etag).build
+            case null => Response.ok.`type`(b.mediaType).lastModified(b.lastModified).tag(b.etag).build
           }
         }
         case null => Response status(Status.NOT_FOUND) build
@@ -50,10 +49,15 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
             if (request.getMethod == "POST" && cache.containsKey(key)) {
                 Response.status(Status.CONFLICT).build()
             } else {
-              (ttl, idleTime) match {
-                case (0, 0) => put(cache, key, new CacheEntry(mediaType, data))
-                case (x, 0) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
-                case (x, y) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
+              (ttl, idleTime, useAsync) match {
+                case (0, 0, false) => cache.put(key, new CacheEntry(mediaType, data))
+                case (x, 0, false) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
+                case (x, y, false) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
+
+                case (0, 0, true) => cache.put(key, new CacheEntry(mediaType, data))
+                case (x, 0, true) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
+                case (x, y, true) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
+
               }
             }
   }
@@ -85,15 +89,7 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
     ManagerInstance.getCache(cacheName).stop
   }
 
-
-
-
-  
-
 }
-
-
-
 
 /**
  * Just wrap a single instance of the Infinispan cache manager. 
