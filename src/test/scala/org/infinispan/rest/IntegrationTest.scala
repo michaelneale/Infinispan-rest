@@ -58,10 +58,6 @@ class IntegrationTest extends TestCase {
 
 
 
-    
-
-
-
     val bout = new ByteArrayOutputStream
     val oo = new ObjectOutputStream(bout)
     oo.writeObject(new CacheEntry("foo", "hey".getBytes))
@@ -81,6 +77,10 @@ class IntegrationTest extends TestCase {
 
     val bytesBack = getMore.getResponseBody
     assertEquals(byteData.length, bytesBack.length)
+
+    val oin = new ObjectInputStream(new ByteArrayInputStream(bytesBack))
+    val ce = oin.readObject.asInstanceOf[CacheEntry]
+    assertEquals("foo", ce.mediaType)
 
   }
 
