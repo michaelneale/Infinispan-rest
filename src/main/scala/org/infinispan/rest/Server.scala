@@ -53,11 +53,9 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
                 case (0, 0, false) => cache.put(key, new CacheEntry(mediaType, data))
                 case (x, 0, false) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
                 case (x, y, false) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
-
                 case (0, 0, true) => cache.put(key, new CacheEntry(mediaType, data))
                 case (x, 0, true) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
                 case (x, y, true) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
-
               }
             }
   }

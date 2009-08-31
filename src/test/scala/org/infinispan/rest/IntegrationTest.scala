@@ -6,6 +6,7 @@ import apache.commons.httpclient.{Header, HttpClient}
 import java.io._
 import java.util.Date
 import javax.servlet.http.HttpServletResponse
+import javax.ws.rs.core.Response.Status
 import jboss.resteasy.plugins.server.servlet.{HttpServletDispatcher, ResteasyBootstrap}
 import junit.framework.TestCase
 import junit.framework.Assert._
@@ -17,8 +18,9 @@ import mortbay.jetty.servlet.Context
  */
 
 class IntegrationTest extends TestCase {
-  def testPutGet = {
-    val server = startServer
+
+  def testBasicOperation = {
+    val server = ServerInstance.server
 
     //now invoke...via HTTP
     val client = new HttpClient
@@ -84,26 +86,18 @@ class IntegrationTest extends TestCase {
 
   }
 
-
-
-
-  def startServer = {
-    val server = new org.mortbay.jetty.Server(8888);
-    val ctx = new Context(server, "/", Context.SESSIONS)
-    ctx.setInitParams(params)
-    ctx.addEventListener(new ResteasyBootstrap)
-    ctx.addEventListener(new StartupListener)
-    ctx.addServlet(classOf[HttpServletDispatcher], "/*")
-    server.setStopAtShutdown(true)
-    server.start
-    server
+  def testEmptyGet = {
+    assertEquals(
+      HttpServletResponse.SC_NOT_FOUND,
+      Client.call(new GetMethod("http://localhost:8888/rest/emptycache/nodata")).getStatusCode
+      )
   }
 
-  def params = {
-    val hm = new java.util.HashMap[String, String]
-    hm.put("resteasy.resources", "org.infinispan.rest.Server")
-    hm
-  }
+
+
+
+
+
 
 
 }

@@ -11,7 +11,7 @@ import manager.DefaultCacheManager
  */
 class StartupListener extends ServletContextListener {
   def contextInitialized(ev: ServletContextEvent) = {
-    ManagerInstance.instance = new DefaultCacheManager("cache-config.xml")
+    ManagerInstance.instance = new DefaultCacheManager("infinispan-config.xml")
     ManagerInstance.instance.start
   }
   def contextDestroyed(ev: ServletContextEvent) = {
