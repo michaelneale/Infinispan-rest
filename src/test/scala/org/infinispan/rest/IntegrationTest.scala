@@ -1,7 +1,7 @@
 package org.infinispan.rest
 
 
-import apache.commons.httpclient.methods.{DeleteMethod, PutMethod, GetMethod, PostMethod}
+import apache.commons.httpclient.methods._
 import apache.commons.httpclient.{Header, HttpClient}
 import java.io._
 import java.util.Date
@@ -58,8 +58,6 @@ class IntegrationTest extends TestCase {
     client.executeMethod(get)
     assertEquals(HttpServletResponse.SC_NOT_FOUND, get.getStatusCode)
 
-
-
     val bout = new ByteArrayOutputStream
     val oo = new ObjectOutputStream(bout)
     oo.writeObject(new CacheEntry("foo", "hey".getBytes))
@@ -92,6 +90,70 @@ class IntegrationTest extends TestCase {
       Client.call(new GetMethod("http://localhost:8888/rest/emptycache/nodata")).getStatusCode
       )
   }
+
+  def testGet = {
+    val post = new PostMethod("http://localhost:8888/rest/more2/data")
+    post.setRequestHeader("Content-Type", "application/text")
+    post.setRequestBody("data")
+    Client.call(post)
+
+    val get = Client.call(new GetMethod("http://localhost:8888/rest/more2/data"))
+    assertEquals(HttpServletResponse.SC_OK, get.getStatusCode)
+    assertNotNull(get.getResponseHeader("ETag").getValue)
+    assertNotNull(get.getResponseHeader("Last-Modified").getValue)
+    assertEquals("application/text", get.getResponseHeader("Content-Type").getValue)
+    assertEquals("data", get.getResponseBodyAsString)
+
+
+  }
+
+
+  def testHead = {
+    val post = new PostMethod("http://localhost:8888/rest/more/data")
+    post.setRequestHeader("Content-Type", "application/text")
+    post.setRequestBody("data")
+    Client.call(post)
+
+    val get = Client.call(new HeadMethod("http://localhost:8888/rest/more/data"))
+    assertEquals(HttpServletResponse.SC_OK, get.getStatusCode)
+    assertNotNull(get.getResponseHeader("ETag").getValue)
+    assertNotNull(get.getResponseHeader("Last-Modified").getValue)
+    assertEquals("application/text", get.getResponseHeader("Content-Type").getValue)
+
+    assertNull(get.getResponseBodyAsString)
+
+  }
+
+  def testPost() = {
+    val post = new PostMethod("http://localhost:8888/rest/posteee/data")
+    post.setRequestHeader("Content-Type", "application/text")
+    post.setRequestBody("data")
+    Client.call(post)
+
+    //Should get a conflict as its a DUPE post
+    assertEquals(HttpServletResponse.SC_CONFLICT, Client.call(post).getStatusCode)
+
+    val put = new PutMethod("http://localhost:8888/rest/posteee/data")
+    put.setRequestHeader("Content-Type", "application/text")
+    put.setRequestBody("data")
+
+    //Should be all ok as its a put
+    assertEquals(HttpServletResponse.SC_OK, Client.call(put).getStatusCode)
+
+  }
+
+  def testPutTimeToLive() = {
+    val post = new PostMethod("http://localhost:8888/rest/putttl/data")
+    post.setRequestHeader("Content-Type", "application/text")
+    post.setRequestHeader("timeToLiveSeconds", "2")
+    post.setRequestHeader("maxIdleTimeSeconds", "3")
+    post.setRequestBody("data")
+    Client.call(post)
+
+
+  }
+
+
 
 
 
