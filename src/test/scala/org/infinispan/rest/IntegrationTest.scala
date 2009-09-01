@@ -4,58 +4,60 @@ package org.infinispan.rest
 import apache.commons.httpclient.methods._
 import apache.commons.httpclient.{Header, HttpClient}
 import java.io._
-import java.util.Date
 import javax.servlet.http.HttpServletResponse
-import javax.ws.rs.core.Response.Status
-import jboss.resteasy.plugins.server.servlet.{HttpServletDispatcher, ResteasyBootstrap}
 import junit.framework.TestCase
 import junit.framework.Assert._
-import mortbay.jetty.servlet.Context
+
 
 /**
- * 
+ * This tests using the Apache HTTP commons client library - but you could use anything
+ * Decided to do this instead of testing the Server implementation itself, as testing the impl directly was kind of too easy.
+ * (Given that RESTEasy does most of the heavy lifting !).
  * @author Michael Neale
  */
 
 class IntegrationTest extends TestCase {
 
+  //val HOST = "http://localhost:8888/"
+  val HOST = "http://localhost:8080/infinispan-rest/"
+  
   def testBasicOperation = {
-    val server = ServerInstance.server
 
     //now invoke...via HTTP
     val client = new HttpClient
 
-    val insert = new PutMethod("http://localhost:8888/rest/mycache/mydata")
+    val insert = new PutMethod(HOST + "rest/mycache/mydata")
     val initialXML = <hey>ho</hey>
 
     insert.setRequestBody(new ByteArrayInputStream(initialXML.toString.getBytes))
     insert.setRequestHeader("Content-Type", "application/octet-stream")
 
-    client.executeMethod(insert)
+    Client.call(insert)
+
     assertNull(insert.getResponseBodyAsString)
 
-    val get = new GetMethod("http://localhost:8888/rest/mycache/mydata")
-    client.executeMethod(get)
+    val get = new GetMethod(HOST + "rest/mycache/mydata")
+    Client.call(get)
     val bytes = get.getResponseBody
     assertEquals(bytes.size, initialXML.toString.getBytes.size)
     assertEquals(<hey>ho</hey>.toString, get.getResponseBodyAsString)
     val hdr: Header = get.getResponseHeader("Content-Type")
     assertEquals("application/octet-stream", hdr.getValue)
 
-    val remove = new DeleteMethod("http://localhost:8888/rest/mycache/mydata");
-    client.executeMethod(remove)
-    client.executeMethod(get)
+    val remove = new DeleteMethod(HOST + "rest/mycache/mydata");
+    Client.call(remove)
+    Client.call(get)
 
     assertEquals(HttpServletResponse.SC_NOT_FOUND, get.getStatusCode)
 
-    client.executeMethod(insert)
-    client.executeMethod(get)
+    Client.call(insert)
+    Client.call(get)
     assertEquals(<hey>ho</hey>.toString, get.getResponseBodyAsString)
 
-    val removeAll = new DeleteMethod("http://localhost:8888/rest/mycache");
-    client.executeMethod(removeAll)
+    val removeAll = new DeleteMethod(HOST + "rest/mycache");
+    Client.call(removeAll)
 
-    client.executeMethod(get)
+    Client.call(get)
     assertEquals(HttpServletResponse.SC_NOT_FOUND, get.getStatusCode)
 
     val bout = new ByteArrayOutputStream
@@ -63,17 +65,16 @@ class IntegrationTest extends TestCase {
     oo.writeObject(new CacheEntry("foo", "hey".getBytes))
     oo.flush
     val byteData = bout.toByteArray
-    println(byteData.length)
 
-    val insertMore = new PutMethod("http://localhost:8888/rest/mycache/mydata")
+    val insertMore = new PutMethod(HOST + "rest/mycache/mydata")
 
     insertMore.setRequestBody(new ByteArrayInputStream(byteData))
     insertMore.setRequestHeader("Content-Type", "application/octet-stream")
 
-    client.executeMethod(insertMore)
+    Client.call(insertMore)
 
-    val getMore = new GetMethod("http://localhost:8888/rest/mycache/mydata")
-    client.executeMethod(getMore)
+    val getMore = new GetMethod(HOST + "rest/mycache/mydata")
+    Client.call(getMore)
 
     val bytesBack = getMore.getResponseBody
     assertEquals(byteData.length, bytesBack.length)
@@ -87,17 +88,17 @@ class IntegrationTest extends TestCase {
   def testEmptyGet = {
     assertEquals(
       HttpServletResponse.SC_NOT_FOUND,
-      Client.call(new GetMethod("http://localhost:8888/rest/emptycache/nodata")).getStatusCode
+      Client.call(new GetMethod(HOST + "rest/emptycache/nodata")).getStatusCode
       )
   }
 
   def testGet = {
-    val post = new PostMethod("http://localhost:8888/rest/more2/data")
+    val post = new PostMethod(HOST + "rest/more2/data")
     post.setRequestHeader("Content-Type", "application/text")
     post.setRequestBody("data")
     Client.call(post)
 
-    val get = Client.call(new GetMethod("http://localhost:8888/rest/more2/data"))
+    val get = Client.call(new GetMethod(HOST + "rest/more2/data"))
     assertEquals(HttpServletResponse.SC_OK, get.getStatusCode)
     assertNotNull(get.getResponseHeader("ETag").getValue)
     assertNotNull(get.getResponseHeader("Last-Modified").getValue)
@@ -109,23 +110,22 @@ class IntegrationTest extends TestCase {
 
 
   def testHead = {
-    val post = new PostMethod("http://localhost:8888/rest/more/data")
+    val post = new PostMethod(HOST + "rest/more/data")
     post.setRequestHeader("Content-Type", "application/text")
     post.setRequestBody("data")
     Client.call(post)
 
-    val get = Client.call(new HeadMethod("http://localhost:8888/rest/more/data"))
+    val get = Client.call(new HeadMethod(HOST + "rest/more/data"))
     assertEquals(HttpServletResponse.SC_OK, get.getStatusCode)
     assertNotNull(get.getResponseHeader("ETag").getValue)
     assertNotNull(get.getResponseHeader("Last-Modified").getValue)
     assertEquals("application/text", get.getResponseHeader("Content-Type").getValue)
 
     assertNull(get.getResponseBodyAsString)
-
   }
 
-  def testPost() = {
-    val post = new PostMethod("http://localhost:8888/rest/posteee/data")
+  def testPostDuplicate() = {
+    val post = new PostMethod(HOST + "rest/posteee/data")
     post.setRequestHeader("Content-Type", "application/text")
     post.setRequestBody("data")
     Client.call(post)
@@ -133,7 +133,7 @@ class IntegrationTest extends TestCase {
     //Should get a conflict as its a DUPE post
     assertEquals(HttpServletResponse.SC_CONFLICT, Client.call(post).getStatusCode)
 
-    val put = new PutMethod("http://localhost:8888/rest/posteee/data")
+    val put = new PutMethod(HOST + "rest/posteee/data")
     put.setRequestHeader("Content-Type", "application/text")
     put.setRequestBody("data")
 
@@ -142,15 +142,66 @@ class IntegrationTest extends TestCase {
 
   }
 
-  def testPutTimeToLive() = {
-    val post = new PostMethod("http://localhost:8888/rest/putttl/data")
+  def testPutDataWithTimeToLive = {
+    val post = new PostMethod(HOST + "rest/putttl/data")
     post.setRequestHeader("Content-Type", "application/text")
     post.setRequestHeader("timeToLiveSeconds", "2")
     post.setRequestHeader("maxIdleTimeSeconds", "3")
     post.setRequestBody("data")
     Client.call(post)
 
+    val get = Client.call(new GetMethod(HOST + "rest/putttl/data"))
+    assertEquals("data", get.getResponseBodyAsString)
 
+    Thread.sleep(3000)
+    Client.call(get)
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, get.getStatusCode)
+  }
+
+  def testRemoveEntry = {
+    val put = new PostMethod(HOST + "rest/posteee/toremove")
+    put.setRequestHeader("Content-Type", "application/text")
+    put.setRequestBody("data")
+    Client.call(put)
+
+    assertEquals(HttpServletResponse.SC_OK, Client.call(new HeadMethod(HOST + "rest/posteee/toremove")).getStatusCode)
+
+    Client.call(new DeleteMethod(HOST + "rest/posteee/toremove"))
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, Client.call(new HeadMethod(HOST + "rest/posteee/toremove")).getStatusCode)
+
+  }
+
+  def testWipeCacheBucket = {
+    val put = new PostMethod(HOST + "rest/posteee/toremove")
+    put.setRequestHeader("Content-Type", "application/text")
+    put.setRequestBody("data")
+    Client.call(put)
+
+    val put_ = new PostMethod(HOST + "rest/posteee/toremove2")
+    put_.setRequestHeader("Content-Type", "application/text")
+    put_.setRequestBody("data")
+    Client.call(put_)
+
+    assertEquals(HttpServletResponse.SC_OK, Client.call(new HeadMethod(HOST + "rest/posteee/toremove")).getStatusCode)
+    Client.call(new DeleteMethod(HOST + "rest/posteee"))
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, Client.call(new HeadMethod(HOST + "rest/posteee/toremove")).getStatusCode)
+  }
+
+  def testAsyncAddRemove = {
+    val put = new PostMethod(HOST + "rest/posteee/async")
+    put.setRequestHeader("Content-Type", "application/text")
+    put.setRequestHeader("performAsync", "true")
+    put.setRequestBody("data")
+    Client.call(put)
+
+    Thread.sleep(50)
+    assertEquals(HttpServletResponse.SC_OK, Client.call(new HeadMethod(HOST + "rest/posteee/async")).getStatusCode)
+
+    val del = new DeleteMethod(HOST + "rest/posteee/async");
+    del.setRequestHeader("performAsync", "true")
+    Client.call(del)
+    Thread.sleep(50)
+    assertEquals(HttpServletResponse.SC_NOT_FOUND, Client.call(new HeadMethod(HOST + "rest/posteee/async")).getStatusCode)
   }
 
 

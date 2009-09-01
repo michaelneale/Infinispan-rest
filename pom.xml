@@ -36,7 +36,7 @@
 
 
 	<build>
-        <finalName>infinispan-rest</finalName>
+        <finalName>infinispan</finalName>
         <sourceDirectory>src/main/scala</sourceDirectory>
         <testSourceDirectory>src/test/scala</testSourceDirectory>
 
