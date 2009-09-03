@@ -3,6 +3,8 @@ package org.infinispan.rest
 
 import apache.commons.httpclient.methods._
 import apache.commons.httpclient.{Header, HttpClient}
+import container.entries.CacheEntry
+import remoting.MIMECacheEntry
 import java.io._
 import javax.servlet.http.HttpServletResponse
 import junit.framework.TestCase
@@ -15,11 +17,10 @@ import junit.framework.Assert._
  * (Given that RESTEasy does most of the heavy lifting !).
  * @author Michael Neale
  */
-
 class IntegrationTest extends TestCase {
 
-  //val HOST = "http://localhost:8888/"
-  val HOST = "http://localhost:8080/infinispan-rest/"
+  val HOST = "http://localhost:8888/"
+  //val HOST = "http://localhost:8080/infinispan-rest/"
   
   def testBasicOperation = {
 
@@ -34,7 +35,8 @@ class IntegrationTest extends TestCase {
 
     Client.call(insert)
 
-    assertNull(insert.getResponseBodyAsString)
+    assertEquals("", insert.getResponseBodyAsString.trim)
+    assertEquals(HttpServletResponse.SC_OK, insert.getStatusCode)
 
     val get = new GetMethod(HOST + "rest/mycache/mydata")
     Client.call(get)
@@ -62,7 +64,7 @@ class IntegrationTest extends TestCase {
 
     val bout = new ByteArrayOutputStream
     val oo = new ObjectOutputStream(bout)
-    oo.writeObject(new CacheEntry("foo", "hey".getBytes))
+    oo.writeObject(new MIMECacheEntry("foo", "hey".getBytes))
     oo.flush
     val byteData = bout.toByteArray
 
@@ -80,8 +82,8 @@ class IntegrationTest extends TestCase {
     assertEquals(byteData.length, bytesBack.length)
 
     val oin = new ObjectInputStream(new ByteArrayInputStream(bytesBack))
-    val ce = oin.readObject.asInstanceOf[CacheEntry]
-    assertEquals("foo", ce.mediaType)
+    val ce = oin.readObject.asInstanceOf[MIMECacheEntry]
+    assertEquals("foo", ce.contentType)
 
   }
 
@@ -203,6 +205,7 @@ class IntegrationTest extends TestCase {
     Thread.sleep(50)
     assertEquals(HttpServletResponse.SC_NOT_FOUND, Client.call(new HeadMethod(HOST + "rest/posteee/async")).getStatusCode)
   }
+
 
 
 

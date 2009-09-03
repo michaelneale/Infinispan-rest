@@ -1,9 +1,10 @@
 package org.infinispan.rest
 
+import remoting.MIMECacheEntry
 import java.util.concurrent.TimeUnit
 import javax.ws.rs._
+import core._
 import core.Response.{ResponseBuilder, Status}
-import core.{Context, Request, Response}
 import manager.{CacheManager, DefaultCacheManager}
 
 @Path("/rest")
@@ -13,10 +14,10 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
   @Path("/{cacheName}/{cacheKey}")
   def getEntry(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
       ManagerInstance.getEntry(cacheName, key) match {
-        case b: CacheEntry => {
-          request.evaluatePreconditions(b.lastModified, b.etag) match {
+        case b: MIMECacheEntry => {
+          request.evaluatePreconditions(b.lastModified, calcETAG(b)) match {
             case bldr: ResponseBuilder => bldr.build
-            case null => Response.ok(b.data, b.mediaType).lastModified(b.lastModified).tag(b.etag).build
+            case null => Response.ok(b.data, b.contentType).lastModified(b.lastModified).tag(calcETAG(b)).build
           }
         }
         case null => Response status(Status.NOT_FOUND) build
@@ -27,10 +28,10 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
   @Path("/{cacheName}/{cacheKey}")
   def headEntry(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
       ManagerInstance.getEntry(cacheName, key) match {
-        case b: CacheEntry => {
-          request.evaluatePreconditions(b.lastModified, b.etag) match {
+        case b: MIMECacheEntry => {
+          request.evaluatePreconditions(b.lastModified, calcETAG(b)) match {
             case bldr: ResponseBuilder => bldr.build
-            case null => Response.ok.`type`(b.mediaType).lastModified(b.lastModified).tag(b.etag).build
+            case null => Response.ok.`type`(b.contentType).lastModified(b.lastModified).tag(calcETAG(b)).build
           }
         }
         case null => Response status(Status.NOT_FOUND) build
@@ -50,14 +51,16 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
                 Response.status(Status.CONFLICT).build()
             } else {
               (ttl, idleTime, useAsync) match {
-                case (0, 0, false) => cache.put(key, new CacheEntry(mediaType, data))
-                case (x, 0, false) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
-                case (x, y, false) => cache.put(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
-                case (0, 0, true) => cache.putAsync(key, new CacheEntry(mediaType, data))
-                case (x, 0, true) => cache.putAsync(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
-                case (x, y, true) => cache.putAsync(key, new CacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
+                case (0, 0, false) => cache.put(key, new MIMECacheEntry(mediaType, data))
+                case (x, 0, false) => cache.put(key, new MIMECacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
+                case (x, y, false) => cache.put(key, new MIMECacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
+                case (0, 0, true) => cache.putAsync(key, new MIMECacheEntry(mediaType, data))
+                case (x, 0, true) => cache.putAsync(key, new MIMECacheEntry(mediaType, data), ttl, TimeUnit.SECONDS)
+                case (x, y, true) => cache.putAsync(key, new MIMECacheEntry(mediaType, data), ttl, TimeUnit.SECONDS, idleTime, TimeUnit.SECONDS)
               }
+              Response.ok.build
             }
+
   }
 
 
@@ -77,6 +80,11 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
     ManagerInstance.getCache(cacheName).stop
   }
 
+  def calcETAG(entry: MIMECacheEntry) = {
+    new EntityTag(entry.contentType + entry.lastModified.getTime  + entry.data.length)
+
+  }
+
 }
 
 /**
@@ -85,9 +93,9 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
 object ManagerInstance {
    var instance: CacheManager = null
    def getCache(name: String) = {
-      instance.getCache(name).asInstanceOf[Cache[String, CacheEntry]]
+      instance.getCache(name).asInstanceOf[Cache[String, MIMECacheEntry]]
    }
-   def getEntry(cacheName: String, key: String) : CacheEntry = {
+   def getEntry(cacheName: String, key: String) : MIMECacheEntry = {
      getCache(cacheName).get(key)
    }
 }
