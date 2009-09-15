@@ -63,7 +63,6 @@ class Server(@Context request: Request, @HeaderParam("performAsync") useAsync: B
 
   }
 
-
   @DELETE
   @Path("/{cacheName}/{cacheKey}")
   def removeEntry(@PathParam("cacheName") cacheName: String, @PathParam("cacheKey") key: String) = {
