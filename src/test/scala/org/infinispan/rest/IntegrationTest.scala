@@ -21,7 +21,7 @@ import testng.Assert._
 class IntegrationTest {
 
   val HOST = "http://localhost:8888/"
-  //val HOST = "http://localhost:8080/infinispan-rest/"
+  //val HOST = "http://localhost:8080/infinispan/"
   
   def testBasicOperation = {
 
@@ -207,14 +207,86 @@ class IntegrationTest {
     assertEquals(HttpServletResponse.SC_NOT_FOUND, Client.call(new HeadMethod(HOST + "rest/posteee/async")).getStatusCode)
   }
 
+  @Test def shouldCopeWithSerializable = {
+    Client.call(new GetMethod(HOST + "rest/wang/wangKey"))
+
+    val obj = new MySer
+    obj.name = "mic"
+    ManagerInstance getCache("wang") put("wangKey", obj)
+    ManagerInstance getCache("wang") put("wangKey2", "hola")
+    ManagerInstance getCache("wang") put("wangKey3", new MyNonSer)
 
 
+    //check we can get it back as an object...
+    val get = new GetMethod(HOST + "rest/wang/wangKey");
+    get.setRequestHeader("Accept", "application/x-java-serialized-object")
+    Client.call(get)
+    assertEquals(HttpServletResponse.SC_OK, get.getStatusCode)
+    val in = new ObjectInputStream(get.getResponseBodyAsStream)
+    val res = in.readObject.asInstanceOf[MySer]
+    assertNotNull(res)
+    assertEquals("mic", res.name)
+    assertEquals("application/x-java-serialized-object", get.getResponseHeader("Content-Type").getValue)
+
+    val getStr = Client.call(new GetMethod(HOST + "rest/wang/wangKey2"))
+    assertEquals("hola", getStr.getResponseBodyAsString)
+    assertEquals("text/plain", getStr.getResponseHeader("Content-Type").getValue)
 
 
+    //now check we can get it back as JSON if we want...
+    get.setRequestHeader("Accept", "application/json")
+    Client.call(get)
+    assertEquals("""{"name":"mic"}""", get.getResponseBodyAsString)
+    assertEquals("application/json", get.getResponseHeader("Content-Type").getValue)
 
 
+    //and why not XML
+    get.setRequestHeader("Accept", "application/xml")
+    Client.call(get)
+    assertEquals("application/xml", get.getResponseHeader("Content-Type").getValue)
+    assertTrue(get.getResponseBodyAsString.indexOf("<org.infinispan.rest.MySer>") > -1)
+
+    //now check we can get it back as JSON if we want...
+    val get3 = new GetMethod(HOST + "rest/wang/wangKey3")
+    get3.setRequestHeader("Accept", "application/json")
+    Client.call(get3)
+    assertEquals("""{"name":"mic"}""", get3.getResponseBodyAsString)
+    assertEquals("application/json", get3.getResponseHeader("Content-Type").getValue)
 
 
+    get3.setRequestHeader("Accept", "*/*")
+    Client.call(get3)
+    assertEquals(HttpServletResponse.SC_NOT_ACCEPTABLE, get3.getStatusCode)
+
+  }
 
 
+  @Test def insertSerializableObjects = {
+    val put = new PutMethod(HOST + "rest/posteee/something")
+    put.setRequestHeader("Content-Type", "application/x-java-serialized-object")
+    val bout = new ByteArrayOutputStream
+    new ObjectOutputStream(bout).writeObject(new MySer)
+    put.setRequestBody(new ByteArrayInputStream(bout.toByteArray))
+    Client.call(put)
+
+    val x = ManagerInstance.getCache("posteee").get("something").asInstanceOf[MySer]
+    assertTrue(x.name == "mic")
+
+  }
+
+
+}
+
+
+class MyNonSer {
+  var name: String = "mic"
+  def getName = name
+  def setName(s: String) = {name = s}
+}
+
+class MySer extends Serializable {
+    var name: String = "mic"
+    /** These are needed for Jackson to Do Its Thing */
+    def getName = name
+    def setName(s: String) = {name = s}
 }
